@@ -48,7 +48,8 @@ class VorbisConan(ConanFile):
                 #self.copy(pattern="*.dylib", dst="lib", keep_path=False)
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
             else:
-                self.copy(pattern="*.so*", dst="lib", src=self.ZIP_FOLDER_NAME, keep_path=False)
+                self.copy(pattern="*.so*", dst="lib", keep_path=False)
+                
 
     def package_info(self):
         self.cpp_info.libs = ['vorbis']
