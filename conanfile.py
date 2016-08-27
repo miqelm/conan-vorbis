@@ -52,4 +52,4 @@ class VorbisConan(ConanFile):
                 
 
     def package_info(self):
-        self.cpp_info.libs = ['vorbis']
+        self.cpp_info.libs = ['vorbis', 'vorbisfile']
