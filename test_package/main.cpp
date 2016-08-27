@@ -7,6 +7,6 @@ int main (void){
 	
 	vorbis_info vi;
 	vorbis_info_init(&vi);
-	cout << "Vorbis version: " << vi.version << endl;
+	cout << "Version variable in initialised vorbis info struct: " << vi.version << endl;
   
 }

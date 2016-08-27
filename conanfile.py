@@ -8,7 +8,7 @@ class VorbisConan(ConanFile):
     generators = "txt"
     settings = "os", "arch", "build_type", "compiler"
     url="http://github.com/coding3d/conan-vorbis"
-    requires = ""
+    requires = "ogg/1.3.2@coding3d/ci"
     license="BSD"
     exports = "*"
     
