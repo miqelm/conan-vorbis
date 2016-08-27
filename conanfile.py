@@ -36,7 +36,7 @@ class VorbisConan(ConanFile):
         self.run("%s && make" % cd_build)
 
     def package(self):
-        self.copy("FindVorbis.cmake", ".", ".")
+        self.copy("FindVORBIS.cmake", ".", ".")
         self.copy("include/vorbis/*", ".", "%s" % (self.ZIP_FOLDER_NAME), keep_path=True)
 
         if self.settings.os == "Windows":
