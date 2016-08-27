@@ -11,15 +11,12 @@ class VorbisConan(ConanFile):
     requires = "ogg/1.3.2@coding3d/ci"
     license="BSD"
     exports = "*"
-    
+
     def configure(self):
-        del self.settings.compiler.libcxx 
-                
+        del self.settings.compiler.libcxx
+
     def build(self):
         env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
-        print(env.command_line)
-        
-        print(self.settings)
 
         try:
             if self.settings.os == "Windows":
@@ -29,19 +26,30 @@ class VorbisConan(ConanFile):
         except:
             pass
 
-        self.run("mkdir _build")
-        self.run("cp -rf %s _build/" % self.ZIP_FOLDER_NAME)
-        cd_build = "cd _build/%s" % self.ZIP_FOLDER_NAME
-        self.run("%s && %s ./configure" % (cd_build, env.command_line))
-        self.run("%s && make" % cd_build)
+        if self.settings.os == "Windows":
+            self.run("mkdir _build")
+            self.run("mkdir _build\%s" % self.ZIP_FOLDER_NAME)
+            self.run("xcopy /E %s _build\%s" % (self.ZIP_FOLDER_NAME, self.ZIP_FOLDER_NAME))
+        else:
+            self.run("mkdir _build")
+            self.run("cp -rf %s _build/" % self.ZIP_FOLDER_NAME)
+
+        if self.settings.os == "Windows":
+            cd_build = "cd _build\%s\win32\VS2015" % self.ZIP_FOLDER_NAME
+            self.run("%s & devenv vorbis_dynamic.sln /upgrade" % cd_build)
+            self.run("%s & %s & msbuild vorbis_dynamic.sln" % (cd_build, env.command_line))
+        else:
+            cd_build = "cd _build/%s" % self.ZIP_FOLDER_NAME
+            self.run("%s && %s ./configure" % (cd_build, env.command_line))
+            self.run("%s && make" % cd_build)
 
     def package(self):
         self.copy("FindVORBIS.cmake", ".", ".")
         self.copy("include/vorbis/*", ".", "%s" % (self.ZIP_FOLDER_NAME), keep_path=True)
 
         if self.settings.os == "Windows":
-            self.copy(pattern="*.dll", dst="bin", src=self.ZIP_FOLDER_NAME, keep_path=False)
-            self.copy(pattern="*.lib", dst="lib", src=self.ZIP_FOLDER_NAME, keep_path=False)
+            self.copy(pattern="*.dll", dst="bin", keep_path=False)
+            self.copy(pattern="*.lib", dst="lib", keep_path=False)
         else:
             if self.settings.os == "Macos":
                 # .a is more flexible so we'll only be using that for now
@@ -49,7 +57,10 @@ class VorbisConan(ConanFile):
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
             else:
                 self.copy(pattern="*.so*", dst="lib", keep_path=False)
-                
+
 
     def package_info(self):
-        self.cpp_info.libs = ['vorbis', 'vorbisfile']
+        if self.settings.os == "Windows":
+            self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
+        else:
+            self.cpp_info.libs = ['vorbis', 'vorbisfile']
