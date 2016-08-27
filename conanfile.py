@@ -17,6 +17,7 @@ class VorbisConan(ConanFile):
                 
     def build(self):
         env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
+        print(env.command_line)
         
         print(self.settings)
 
@@ -31,7 +32,7 @@ class VorbisConan(ConanFile):
         self.run("mkdir _build")
         self.run("cp -rf %s _build/" % self.ZIP_FOLDER_NAME)
         cd_build = "cd _build/%s" % self.ZIP_FOLDER_NAME
-        self.run("%s && ./configure" % cd_build)
+        self.run("%s && %s ./configure" % (cd_build, env.command_line))
         self.run("%s && make" % cd_build)
 
     def package(self):
