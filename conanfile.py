@@ -1,5 +1,5 @@
 # Only building shared library, since the static library would not work
-from conans import ConanFile, CMake, os
+from conans import ConanFile, CMake, os, ConfigureEnvironment
 
 class VorbisConan(ConanFile):
     name = "vorbis"
@@ -16,8 +16,9 @@ class VorbisConan(ConanFile):
         del self.settings.compiler.libcxx 
                 
     def build(self):
-        self.system_requirements()
-        cmake = CMake(self.settings)
+        env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
+        
+        print(self.settings)
 
         try:
             if self.settings.os == "Windows":
