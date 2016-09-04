@@ -8,7 +8,7 @@ class VorbisConan(ConanFile):
     generators = "txt"
     settings = "os", "arch", "build_type", "compiler"
     url="http://github.com/coding3d/conan-vorbis"
-    requires = "ogg/1.3.2@coding3d/ci"
+    requires = "ogg/1.3.2@coding3d/stable"
     license="BSD"
     exports = "*"
 
@@ -40,7 +40,7 @@ class VorbisConan(ConanFile):
             self.run("%s & %s & msbuild vorbis_dynamic.sln" % (cd_build, env.command_line))
         else:
             cd_build = "cd _build/%s" % self.ZIP_FOLDER_NAME
-            self.run("%s && %s ./configure" % (cd_build, env.command_line))
+            self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env.command_line))
             self.run("%s && make" % cd_build)
 
     def package(self):
