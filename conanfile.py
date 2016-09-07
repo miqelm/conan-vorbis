@@ -1,10 +1,10 @@
-# Only building shared library, since the static library would not work
 from conans import ConanFile, CMake, os, ConfigureEnvironment
+from conans.tools import download, unzip
 
 class VorbisConan(ConanFile):
     name = "vorbis"
     version = "1.3.5"
-    ZIP_FOLDER_NAME = "%s-%s" % (name, version)
+    ZIP_FOLDER_NAME = "lib%s-%s" % (name, version)
     generators = "txt"
     settings = "os", "arch", "build_type", "compiler"
     url="http://github.com/coding3d/conan-vorbis"
@@ -15,31 +15,29 @@ class VorbisConan(ConanFile):
     def configure(self):
         del self.settings.compiler.libcxx
 
-    def build(self):
-        env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
-
+    def source(self):
         try:
             if self.settings.os == "Windows":
-                self.run("rd /s /q _build")
+                self.run("rd /s /q %s" % self.ZIP_FOLDER_NAME)
             else:
-                self.run("rm -rf _build")
+                self.run("rm -rf %s" % self.ZIP_FOLDER_NAME)
         except:
             pass
 
-        if self.settings.os == "Windows":
-            self.run("mkdir _build")
-            self.run("mkdir _build\%s" % self.ZIP_FOLDER_NAME)
-            self.run("xcopy /E %s _build\%s" % (self.ZIP_FOLDER_NAME, self.ZIP_FOLDER_NAME))
-        else:
-            self.run("mkdir _build")
-            self.run("cp -rf %s _build/" % self.ZIP_FOLDER_NAME)
+        zip_name = "%s.tar.gz" % self.ZIP_FOLDER_NAME
+
+        download("http://downloads.xiph.org/releases/vorbis/%s" % zip_name, zip_name)
+        unzip(zip_name)
+
+    def build(self):
+        env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
 
         if self.settings.os == "Windows":
-            cd_build = "cd _build\%s\win32\VS2015" % self.ZIP_FOLDER_NAME
+            cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s & devenv vorbis_dynamic.sln /upgrade" % cd_build)
             self.run("%s & %s & msbuild vorbis_dynamic.sln" % (cd_build, env.command_line))
         else:
-            cd_build = "cd _build/%s" % self.ZIP_FOLDER_NAME
+            cd_build = "cd %s" % self.ZIP_FOLDER_NAME
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env.command_line))
             self.run("%s && make" % cd_build)
 
@@ -57,7 +55,7 @@ class VorbisConan(ConanFile):
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
             else:
                 self.copy(pattern="*.so*", dst="lib", keep_path=False)
-
+                self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
         if self.settings.os == "Windows":

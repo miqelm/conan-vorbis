@@ -11,7 +11,7 @@ Thumbs.db
 #Emacs buffers
 \#*\#
 
-/_build
+/libvorbis*
 /test_package/build
 conanfile.pyc
 conaninfo.txt
