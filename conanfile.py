@@ -37,8 +37,8 @@ class VorbisConan(ConanFile):
             libdirs_ext="<AdditionalLibraryDirectories>$(LIB);"
             replace_in_file("%s\win32\VS2010\libvorbis\libvorbis_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
             replace_in_file("%s\win32\VS2010\libvorbisfile\libvorbisfile_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
-            replace_in_file("%s\win32\VS2010\vorbisdec\vorbisdec_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
-            replace_in_file("%s\win32\VS2010\vorbisenc\vorbisenc_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
+            replace_in_file("%s\win32\VS2010\\vorbisdec\\vorbisdec_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
+            replace_in_file("%s\win32\VS2010\\vorbisenc\\vorbisenc_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
             cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s & devenv vorbis_dynamic.sln /upgrade" % cd_build)
             self.run("%s & %s & msbuild vorbis_dynamic.sln" % (cd_build, env.command_line))
