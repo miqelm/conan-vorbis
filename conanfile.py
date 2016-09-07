@@ -1,5 +1,5 @@
 from conans import ConanFile, CMake, os, ConfigureEnvironment
-from conans.tools import download, unzip
+from conans.tools import download, unzip, replace_in_file
 
 class VorbisConan(ConanFile):
     name = "vorbis"
@@ -33,6 +33,12 @@ class VorbisConan(ConanFile):
         env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
 
         if self.settings.os == "Windows":
+            libdirs="<AdditionalLibraryDirectories>"
+            libdirs_ext="<AdditionalLibraryDirectories>$(LIB);"
+            replace_in_file("%s\win32\VS2010\libvorbis\libvorbis_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
+            replace_in_file("%s\win32\VS2010\libvorbisfile\libvorbisfile_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
+            replace_in_file("%s\win32\VS2010\libvorbisdec\libvorbisdec_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
+            replace_in_file("%s\win32\VS2010\libvorbisenc\libvorbisenc_dynamic.vcxproj" % self.ZIP_FOLDER_NAME, libdirs, libdirs_ext)
             cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s & devenv vorbis_dynamic.sln /upgrade" % cd_build)
             self.run("%s & %s & msbuild vorbis_dynamic.sln" % (cd_build, env.command_line))
