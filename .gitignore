@@ -12,7 +12,7 @@ Thumbs.db
 \#*\#
 
 /libvorbis*
-/test_package/build
+/test/build
 conanfile.pyc
 conaninfo.txt
 conanbuildinfo.txt

@@ -45,7 +45,7 @@ class VorbisConan(ConanFile):
         else:
             cd_build = "cd %s" % self.ZIP_FOLDER_NAME
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env.command_line))
-            self.run("%s && make" % cd_build)
+            self.run("%s && %s make" % (cd_build, env.command_line))
 
     def package(self):
         self.copy("FindVORBIS.cmake", ".", ".")
