@@ -19,6 +19,10 @@ class VorbisConan(ConanFile):
 
         if self.settings.os == "Windows":
             self.options.remove("fPIC")
+        else:
+            # There are linking errors with the shared library on Macos and
+            # the static library on Linux, so we don't use them.
+            self.options.remove("shared")
 
     def source(self):
         zip_name = "%s.tar.gz" % self.ZIP_FOLDER_NAME
@@ -71,16 +75,10 @@ class VorbisConan(ConanFile):
             self.copy(pattern="*.lib", dst="lib", keep_path=False)
         else:
             if self.settings.os == "Macos":
-                if self.options.shared:
-                    self.copy(pattern="*.dylib", dst="lib", keep_path=False)
-                else:
-                    self.copy(pattern="*.a", dst="lib", keep_path=False)
+                self.copy(pattern="*.a", dst="lib", keep_path=False)
             else:
-                if self.options.shared:
-                    self.copy(pattern="*.so*", dst="lib", keep_path=False)
-                else:
-                    self.copy(pattern="*.a", dst="lib", keep_path=False)
-
+                self.copy(pattern="*.so*", dst="lib", keep_path=False)
+ 
     def package_info(self):
         if self.settings.os == "Windows":
             self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
