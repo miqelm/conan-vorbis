@@ -19,4 +19,4 @@ install:
   - conan user # Creqte conan data directory
 
 test_script:
-  - C:\Python27-x64\python build.py
+  - python build.py
