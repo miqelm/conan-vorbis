@@ -46,6 +46,7 @@ class VorbisConan(ConanFile):
                 replace_in_file("./%s/configure" % self.ZIP_FOLDER_NAME, old_str, new_str)
 
         if self.settings.os == "Windows":
+            env_line = env.command_line
             if self.options.shared:
                 vs_suffix = "_dynamic"
             else:
