@@ -7,3 +7,6 @@ conan_basic_setup()
 add_executable(testVorbis main.cpp)
 target_link_libraries(testVorbis ${CONAN_LIBS})
 
+IF(WIN32 AND NOT MINGW)
+  SET_TARGET_PROPERTIES(testVorbis PROPERTIES LINK_FLAGS "/NODEFAULTLIB:\"LIBCMTD\" /NODEFAULTLIB:\"LIBCMT\"")
+ENDIF()
