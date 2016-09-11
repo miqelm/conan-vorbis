@@ -1,5 +1,5 @@
 from conan.packager import ConanMultiPackager
-import os
+import os, platform
 
 if __name__ == "__main__":
     builder = ConanMultiPackager()
