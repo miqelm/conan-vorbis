@@ -9,7 +9,7 @@ class VorbisConan(ConanFile):
     settings = "os", "arch", "build_type", "compiler"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = "shared=False", "fPIC=True"
-    url="http://github.com/coding3d/conan-vorbis"
+    url="http://github.com/dimitri03/conan-vorbis"
     requires = "ogg/1.3.2@coding3d/stable"
     license="BSD"
     exports = "*"
