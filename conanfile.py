@@ -63,8 +63,8 @@ class VorbisConan(ConanFile):
                 old_str = '-install_name \$rpath/\$soname'
                 new_str = '-install_name \$soname'
                 replace_in_file("./%s/configure" % self.ZIP_FOLDER_NAME, old_str, new_str)
-            else:
-                env_line = env_line.replace('-lm', '')
+  #          else:
+   #             env_line = env_line.replace('-lm', '')
 
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env_line))
             self.run("%s && %s make" % (cd_build, env_line))
