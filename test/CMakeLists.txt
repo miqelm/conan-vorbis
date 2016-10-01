@@ -8,6 +8,6 @@ set(CMAKE_CXX_FLAGS "${CONAN_CXX_FLAGS}")
 set(CMAKE_SHARED_LINKER_FLAGS "${CONAN_SHARED_LINKER_FLAGS}")
 
 add_executable(testVorbis main.c)
-target_link_libraries(testVorbis ${CONAN_LIBS})
+target_link_libraries(testVorbis ${CONAN_LIBS} -lm)
 SET_TARGET_PROPERTIES(testVorbis PROPERTIES LINK_FLAGS "${CONAN_EXE_LINKER_FLAGS}")
 
