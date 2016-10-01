@@ -32,12 +32,11 @@ class VorbisConan(ConanFile):
 
         if self.settings.os == "Linux" or self.settings.os == "Macos":
             if self.options.fPIC:
-                 env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
-                 if self.settings.arch == "x86":
-                     env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-m32 ')
-                     print("COMMAND LINE: " + env_line)
+                env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
             else:
                  env_line = env.command_line
+                 
+            print("COMMAND LINE: " + env_line)
                  
             if self.settings.os == "Macos":
                 old_str = '-install_name \$rpath/\$soname'
