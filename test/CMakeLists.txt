@@ -9,4 +9,5 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CONAN_SHARED_LINKER_FLAGS}")
 
 add_executable(testVorbis main.cpp)
 target_link_libraries(testVorbis ${CONAN_LIBS})
+SET_TARGET_PROPERTIES(testGlew PROPERTIES LINK_FLAGS "${CONAN_EXE_LINKER_FLAGS}")
 
