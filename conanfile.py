@@ -35,6 +35,8 @@ class VorbisConan(ConanFile):
                 env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
             else:
                  env_line = env.command_line
+            
+            env_line = env_line.replace('-logg', '-logg -lm')
                  
             print("COMMAND LINE: " + env_line)
                  
