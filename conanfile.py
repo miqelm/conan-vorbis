@@ -90,8 +90,5 @@ class VorbisConan(ConanFile):
                 self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
             else:
                 self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
-                if self.settings.compiler.runtime != "MT":
-                    self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMTD')
-                    self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
         else:
             self.cpp_info.libs = ['vorbis', 'vorbisfile']
