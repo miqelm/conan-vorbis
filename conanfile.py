@@ -57,12 +57,15 @@ class VorbisConan(ConanFile):
             
             #env_line = env_line.replace('-logg', '-logg -lm')
                  
+            cd_build = "cd %s" % self.ZIP_FOLDER_NAME
+            
             if self.settings.os == "Macos":
                 old_str = '-install_name \$rpath/\$soname'
                 new_str = '-install_name \$soname'
                 replace_in_file("./%s/configure" % self.ZIP_FOLDER_NAME, old_str, new_str)
-            
-            cd_build = "cd %s" % self.ZIP_FOLDER_NAME
+            else:
+                self.run("%s && chmod +x ./autogen.sh && ./autogen.sh" % (cd_build))
+
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env_line))
             self.run("%s && %s make" % (cd_build, env_line))
 
@@ -89,7 +92,6 @@ class VorbisConan(ConanFile):
                 self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
             else:
                 self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
-                self.cpp_info.libs.append('m')
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMTD')
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
                 
