@@ -30,21 +30,6 @@ class VorbisConan(ConanFile):
     def build(self):
         env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
 
-        if self.settings.os == "Linux" or self.settings.os == "Macos":
-            if self.options.fPIC:
-                env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
-            else:
-                 env_line = env.command_line
-            
-            env_line = env_line.replace('-logg', '-logg -lm')
-                 
-            print("COMMAND LINE: " + env_line)
-                 
-            if self.settings.os == "Macos":
-                old_str = '-install_name \$rpath/\$soname'
-                new_str = '-install_name \$soname'
-                replace_in_file("./%s/configure" % self.ZIP_FOLDER_NAME, old_str, new_str)
-
         if self.settings.os == "Windows":
             env_line = env.command_line
             if self.options.shared:
@@ -64,6 +49,19 @@ class VorbisConan(ConanFile):
             self.run("%s && %s & msbuild vorbis%s.sln /property:Configuration=%s /property:Platform=%s" % 
             (cd_build, env_line, vs_suffix, self.settings.build_type, platform))
         else:
+            
+            if self.options.fPIC:
+                env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
+            else:
+                 env_line = env.command_line
+            
+            #env_line = env_line.replace('-logg', '-logg -lm')
+                 
+            if self.settings.os == "Macos":
+                old_str = '-install_name \$rpath/\$soname'
+                new_str = '-install_name \$soname'
+                replace_in_file("./%s/configure" % self.ZIP_FOLDER_NAME, old_str, new_str)
+            
             cd_build = "cd %s" % self.ZIP_FOLDER_NAME
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env_line))
             self.run("%s && %s make" % (cd_build, env_line))
