@@ -37,6 +37,8 @@ class VorbisConan(ConanFile):
         if self.settings.os == "Linux" or self.settings.os == "Macos":
             if self.options.fPIC:
                  env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
+                 if self.settings.arch == "x86":
+                     env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-m32 ')
             else:
                  env_line = env.command_line
                  
@@ -60,7 +62,9 @@ class VorbisConan(ConanFile):
             replace_in_file("%s\win32\VS2010\\vorbisenc\\vorbisenc%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), libdirs, libdirs_ext)
             cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s && devenv vorbis%s.sln /upgrade" % (cd_build, vs_suffix))
-            self.run("%s && %s & msbuild vorbis%s.sln" % (cd_build, env_line, vs_suffix))
+            platform = "Win32" if self.settings.arch == "x86" else "x64"
+            self.run("%s && %s & msbuild vorbis%s.sln /property:Configuration=%s /property:Platform=%s" % 
+            (cd_build, env_line, vs_suffix, self.settings.build_type, platform))
         else:
             cd_build = "cd %s" % self.ZIP_FOLDER_NAME
             self.run("%s && chmod +x ./configure && %s ./configure" % (cd_build, env_line))

@@ -1,7 +1,7 @@
 from conans import ConanFile, CMake
 import os
 
-channel = os.getenv("CONAN_CHANNEL", "ci")
+channel = os.getenv("CONAN_CHANNEL", "testing")
 username = os.getenv("CONAN_USERNAME", "coding3d")
 
 class TestVorbis(ConanFile):
