@@ -91,8 +91,8 @@ class VorbisConan(ConanFile):
             else:
                 self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMTD')
-                #self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
-                #self.cpp_info.exelinkflags.append('/NODEFAULTLIB:MSVCRT')
+                self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
+                self.cpp_info.exelinkflags.append('/NODEFAULTLIB:MSVCRT')
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:MSVCRTD')
         else:
             self.cpp_info.libs = ['vorbis', 'vorbisfile']
