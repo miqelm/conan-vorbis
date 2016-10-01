@@ -34,7 +34,8 @@ class VorbisConan(ConanFile):
             if self.options.fPIC:
                  env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
                  if self.settings.arch == "x86":
-                     env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-m32 -lm ')
+                     env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-m32 ')
+                     print("COMMAND LINE: " + env_line)
             else:
                  env_line = env.command_line
                  
