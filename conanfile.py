@@ -97,3 +97,5 @@ class VorbisConan(ConanFile):
                 
         else:
             self.cpp_info.libs = ['vorbis', 'vorbisfile']
+            if not self.options.shared and not self.settings.os == "Macos":
+                self.cpp_info.libs.append('m')
