@@ -34,6 +34,8 @@ class VorbisConan(ConanFile):
 
         if self.settings.os == "Windows":
             env_line = env.command_line
+            # Workaround for the conan CL bug
+            env_line = env.command_line.replace("%CL%", '')
             if self.options.shared:
                 vs_suffix = "_dynamic"
             else:
