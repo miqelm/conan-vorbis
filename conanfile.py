@@ -34,11 +34,14 @@ class VorbisConan(ConanFile):
 
         if self.settings.os == "Windows":
             env_line = env.command_line
+            #Conan variables bug workaround
+            env_line = env.command_line.replace("%CL%", '')
+            env_line = env.command_line.replace("%LIB%", '')
             if self.options.shared:
                 vs_suffix = "_dynamic"
             else:
                 vs_suffix = "_static"
-            
+
             libdirs="<AdditionalLibraryDirectories>"
             libdirs_ext="<AdditionalLibraryDirectories>$(LIB);"
             replace_in_file("%s\win32\VS2010\libvorbis\libvorbis%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), libdirs, libdirs_ext)
@@ -48,17 +51,17 @@ class VorbisConan(ConanFile):
             cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s && devenv vorbis%s.sln /upgrade" % (cd_build, vs_suffix))
             platform = "Win32" if self.settings.arch == "x86" else "x64"
-            self.run("%s && %s & msbuild vorbis%s.sln /property:Configuration=%s /property:Platform=%s" % 
+            self.run("%s && %s & msbuild vorbis%s.sln /property:Configuration=%s /property:Platform=%s" %
             (cd_build, env_line, vs_suffix, self.settings.build_type, platform))
         else:
-            
+
             if self.options.fPIC:
                 env_line = env.command_line.replace('CFLAGS="', 'CFLAGS="-fPIC ')
             else:
                 env_line = env.command_line
-            
+
             cd_build = "cd %s" % self.ZIP_FOLDER_NAME
-            
+
             if self.settings.os == "Macos":
                 old_str = '-install_name \$rpath/\$soname'
                 new_str = '-install_name \$soname'
@@ -80,7 +83,7 @@ class VorbisConan(ConanFile):
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
             else:
                 self.copy(pattern="*.so*", dst="lib", keep_path=False)
- 
+
     def package_info(self):
         if self.settings.os == "Windows":
             if self.options.shared:
