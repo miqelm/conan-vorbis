@@ -19,6 +19,8 @@ class VorbisConan(ConanFile):
 
         if self.settings.os == "Windows":
             self.options.remove("fPIC")
+        else:
+            self.options.remove("shared")
 
     def source(self):
         zip_name = "%s.tar.gz" % self.ZIP_FOLDER_NAME
@@ -55,8 +57,6 @@ class VorbisConan(ConanFile):
             else:
                 env_line = env.command_line
             
-            #env_line = env_line.replace('-logg', '-logg -lm')
-                 
             cd_build = "cd %s" % self.ZIP_FOLDER_NAME
             
             if self.settings.os == "Macos":
@@ -76,13 +76,10 @@ class VorbisConan(ConanFile):
                 self.copy(pattern="*.dll", dst="bin", keep_path=False)
             self.copy(pattern="*.lib", dst="lib", keep_path=False)
         else:
-            if self.options.shared:
-                if self.settings.os == "Macos":
-                    self.copy(pattern="*.dylib", dst="lib", keep_path=False)
-                else:
-                    self.copy(pattern="*.so*", dst="lib", keep_path=False)
-            else:
+            if self.settings.os == "Macos":
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
+            else:
+                self.copy(pattern="*.so*", dst="lib", keep_path=False)
  
     def package_info(self):
         if self.settings.os == "Windows":
@@ -92,8 +89,5 @@ class VorbisConan(ConanFile):
                 self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMTD')
                 self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
-                
         else:
-            self.cpp_info.libs = ['vorbis', 'vorbisfile']
-            if not self.options.shared and not self.settings.os == "Macos":
-                self.cpp_info.libs.append('m')
+            self.cpp_info.libs = ['vorbis', 'vorbisfile', 'vorbisenc']
