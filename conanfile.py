@@ -33,9 +33,8 @@ class VorbisConan(ConanFile):
         env = ConfigureEnvironment(self.deps_cpp_info, self.settings)
 
         if self.settings.os == "Windows":
-            
-            #Conan variables bug workaround
-            env_line = env.command_line.replace("%LIB%", '')
+
+            env_line = env.command_line
             
             if self.options.shared:
                 vs_suffix = "_dynamic"
