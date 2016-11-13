@@ -51,7 +51,7 @@ class VorbisConan(ConanFile):
             self.run("%s && devenv vorbis%s.sln /upgrade" % (cd_build, vs_suffix))
             platform = "Win32" if self.settings.arch == "x86" else "x64"
             self.run("%s && %s & msbuild vorbis%s.sln /property:Configuration=%s /property:Platform=%s" %
-            (cd_build, env_line, vs_suffix, self.settings.build_type, platform))
+            (env_line, cd_build, vs_suffix, self.settings.build_type, platform))
         else:
 
             if self.options.fPIC:
