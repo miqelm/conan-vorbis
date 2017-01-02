@@ -1,6 +1,13 @@
 from conans import ConanFile, CMake, os, ConfigureEnvironment
 from conans.tools import download, unzip, replace_in_file
 
+def replace_in_file_regex(file_path, search, replace):
+    content = load(file_path)
+    content = re.sub(search, replace, content)
+    content = content.encode("utf-8")
+    with open(file_path, "wb") as handle:
+        handle.write(content)
+
 class VorbisConan(ConanFile):
     name = "vorbis"
     version = "1.3.5"
@@ -47,6 +54,18 @@ class VorbisConan(ConanFile):
             replace_in_file("%s\win32\VS2010\libvorbisfile\libvorbisfile%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), libdirs, libdirs_ext)
             replace_in_file("%s\win32\VS2010\\vorbisdec\\vorbisdec%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), libdirs, libdirs_ext)
             replace_in_file("%s\win32\VS2010\\vorbisenc\\vorbisenc%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), libdirs, libdirs_ext)
+            vs_runtime = {
+                "MT": "MultiThreaded",
+                "MTd": "MultiThreadedDebug",
+                "MD": "MultiThreadedDLL",
+                "MDd": "MultiThreadedDebugDLL"
+            }
+            runtime_regex = r"<RuntimeLibrary>\w+</RuntimeLibrary>"
+            runtime_value = "<RuntimeLibrary>%s</RuntimeLibrary>" % vs_runtime.get(str(self.settings.compiler.runtime), "Invalid")
+            replace_in_file_regex("%s\win32\VS2010\libvorbis\libvorbis%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), runtime_regex, runtime_value)
+            replace_in_file_regex("%s\win32\VS2010\libvorbisfile\libvorbisfile%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), runtime_regex, runtime_value)
+            replace_in_file_regex("%s\win32\VS2010\\vorbisdec\\vorbisdec%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), runtime_regex, runtime_value)
+            replace_in_file_regex("%s\win32\VS2010\\vorbisenc\\vorbisenc%s.vcxproj" % (self.ZIP_FOLDER_NAME, vs_suffix), runtime_regex, runtime_value)
             cd_build = "cd %s\win32\VS2010" % self.ZIP_FOLDER_NAME
             self.run("%s && devenv vorbis%s.sln /upgrade" % (cd_build, vs_suffix))
             platform = "Win32" if self.settings.arch == "x86" else "x64"
@@ -86,10 +105,8 @@ class VorbisConan(ConanFile):
     def package_info(self):
         if self.settings.os == "Windows":
             if self.options.shared:
-                self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
+                self.cpp_info.libs = ['libvorbis', 'libvorbisenc', 'libvorbisfile']
             else:
-                self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
-                self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMTD')
-                self.cpp_info.exelinkflags.append('/NODEFAULTLIB:LIBCMT')
+                self.cpp_info.libs = ['libvorbis_static', 'libvorbisenc_static', 'libvorbisfile_static']
         else:
             self.cpp_info.libs = ['vorbis', 'vorbisfile', 'vorbisenc']
