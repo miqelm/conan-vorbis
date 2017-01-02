@@ -3,7 +3,7 @@ find_library(VORBIS_LIBRARY NAMES vorbis vorbis_static libvorbis libvorbis_stati
 find_library(VORBISENC_LIBRARY NAMES vorbisenc vorbisenc_static libvorbisenc libvorbisenc_static PATHS lib )
 find_library(VORBISFILE_LIBRARY NAMES vorbisfile vorbisfile_static libvorbisfile libvorbisfile_static PATHS lib )
 
-ENDIF(NOT VORBISENC_LIBRARY)
+IF(NOT VORBISENC_LIBRARY)
   SET(VORBISENC_LIBRARY VORBIS_LIBRARY)
 ENDIF()
 
