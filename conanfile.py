@@ -1,5 +1,6 @@
 from conans import ConanFile, CMake, os, ConfigureEnvironment
 from conans.tools import download, unzip, replace_in_file
+from conans.util.files import load
 
 def replace_in_file_regex(file_path, search, replace):
     content = load(file_path)
