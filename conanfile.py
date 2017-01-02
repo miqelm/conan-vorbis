@@ -107,8 +107,8 @@ class VorbisConan(ConanFile):
     def package_info(self):
         if self.settings.os == "Windows":
             if self.options.shared:
-                self.cpp_info.libs = ['libvorbis', 'libvorbisenc', 'libvorbisfile']
+                self.cpp_info.libs = ['libvorbis', 'libvorbisfile']
             else:
-                self.cpp_info.libs = ['libvorbis_static', 'libvorbisenc_static', 'libvorbisfile_static']
+                self.cpp_info.libs = ['libvorbis_static', 'libvorbisfile_static']
         else:
             self.cpp_info.libs = ['vorbis', 'vorbisfile', 'vorbisenc']
